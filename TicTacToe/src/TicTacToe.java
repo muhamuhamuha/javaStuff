@@ -17,8 +17,9 @@ public class TicTacToe {
 
         int x = 0, y = 0;
         do {
-            System.out.println(t.player == t.X?"Player X turn":"Player O turn");
+            System.out.println(t.player == t.X ? "Player X turn" : "Player O turn");
             System.out.println("Enter x and y coordinates");
+            System.out.println(t.toString());
             x = kScan.nextInt();
             y = kScan.nextInt();
 
@@ -116,7 +117,6 @@ public class TicTacToe {
             if (sumRDiag == player * 3)
                 winWin = true;
         
-        System.out.println(winWin);
         return winWin;
         }
 
