@@ -8,8 +8,14 @@ public class TicTacToe {
     public static void main(String[] args) {
         System.out.println("---\n" 
         + LocalTime.now() + "\n---\n");
+
+        runTTT();
         
-        
+    }
+
+    /** Runs the tictactoe game */
+    public static void runTTT() {
+
         ttt t = new ttt();
         System.out.println("Invoke! Caw caw! Invoke!");
         System.out.println("A new game hath been invokethed.");
@@ -44,6 +50,7 @@ public class TicTacToe {
         public ttt() {
             board = new int[3][3];
         }
+
 
         /** Place an X or O at board position x, y */
         public void putSign(int x, int y) {
