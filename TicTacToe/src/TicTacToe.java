@@ -1,19 +1,52 @@
+import java.util.Arrays;
+import java.util.Scanner;
+import java.time.LocalTime;
+
+
 public class TicTacToe {
+
     public static void main(String[] args) {
+        System.out.println("---\n" 
+        + LocalTime.now() + "\n---\n");
         
+        
+        ttt t = new ttt();
+        System.out.println("Invoke! Caw caw! Invoke!");
+        System.out.println("A new game hath been invokethed.");
+        Scanner kScan = new Scanner(System.in);
+
+        int x = 0, y = 0;
+        do {
+            System.out.println(t.player == t.X?"Player X turn":"Player O turn");
+            System.out.println("Enter x and y coordinates");
+            x = kScan.nextInt();
+            y = kScan.nextInt();
+
+            t.putSign(x, y);
+            System.out.println(t.toString());
+            System.out.println("____________");
+            t.displayWinner();
+        } while (t.isEmpty);
+        kScan.close();
     }
 
-    public class ttt {
+    public static class ttt {
+
         public static final int X = 1, O = -1;
         public static final int EMPTY = 0;
 
         public int player = X;
-        private int[][] board = new int[3][3];
+        public static int[][] board = new int[3][3];
         public boolean isEmpty = false;
+
+        // constructor flushes board
+        public ttt() {
+            board = new int[3][3];
+        }
 
         /** Place an X or O at board position x, y */
         public void putSign(int x, int y) {
-            if (x<0 || x >2 || y<0 || y>2) {
+            if (x < 0 || x > 2 || y < 0 || y > 2) {
                 System.out.println("That positon doth not "
                     + "existeth on these boaaarrrrrdss");
                 return;
@@ -27,32 +60,47 @@ public class TicTacToe {
             player = -player;  // switch players b/c O = -X
         }
 
-        /** Verifies if a player has one */
+        /** Verifies if player wins by row */
+        public static boolean rowWin(int player) {
+            int sumRow = 0;
+            boolean winWin = false;
+            for (int[] row : board) {
+                sumRow = Arrays.stream(row).sum();
+                if (sumRow == player * 3) {
+                    winWin = true;
+                    break;
+                }
+            }
+            return winWin;
+        }
+
+        /** Will decide if player wins columnally */
+        public static boolean colWin(int player) {
+            boolean winWin = false;
+            
+            for(int row = 0; row < 3; row++) {
+                int sumCol = 0;
+                for (int col = 0; col < 3; col++) {
+                   sumCol += board[col][row];
+                   if (sumCol == player * 3) {
+                       winWin = true;
+                       break;
+                   }
+               }
+            }
+            return winWin;
+        }
+
         public boolean isWin(int player) {
             boolean winWin = false;
+    
             // sum rows
-            for (int[] row : board) {
-                if (Arrays.stream(row).sum() == player * 3)
-                    winWin = true;  
-            }
+            if (rowWin(player) == true)
+                winWin = true;
 
             // sum columns
-            int r = 0, c = 0;
-            while (r < board.length) {
-                while (c < board[r].length) {
-                    int[] cols = new int[board.length];
-                    while (r < board.length && c < board[r].length) {
-                        cols[r] = c;
-                    }
-                    if (Arrays.stream(cols).sum() == player * 3) {
-                        winWin = true;
-                        break;
-                    }
-                    r = 0;
-                    c++;   
-                }
-                r++;
-            }
+            if (colWin(player) == true)
+                winWin = true;
 
             // sum diagonals from top left
             int sumLDiag = 0;
@@ -67,19 +115,19 @@ public class TicTacToe {
                 sumRDiag += board[i][len--];
             if (sumRDiag == player * 3)
                 winWin = true;
-
-
-            return winWin;
+        
+        System.out.println(winWin);
+        return winWin;
         }
 
         /** Display winner or tie or unfinished game */
         public void displayWinner() {
             if (isWin(X)) {
-                System.out.println("\n X wins!");
+                System.out.println("\nX wins!");
                 isEmpty = false;
             }
             else if (isWin(O)) {
-                System.out.println("\n O wins!");
+                System.out.println("\nO wins!");
             } else {
                 if (!isEmpty) {
                     System.out.println("Tied.");
@@ -92,6 +140,7 @@ public class TicTacToe {
             isEmpty = false;
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
+
                     switch (board[i][j]) {
                         case X: 
                             s.append(" X ");
@@ -109,7 +158,7 @@ public class TicTacToe {
                     }
                 }
                 if (i < 2) {
-                    s.append("\n---------------\n");
+                    s.append("\n------------\n");
                 }
             }
             return s.toString();
